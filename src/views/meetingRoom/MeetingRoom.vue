@@ -1,10 +1,13 @@
 <template>
   <div>
+    <!-- register -->
     <div v-show="!this.participants">
       <h1>MeetingRoom</h1>
       <input type="text" v-model="name">
       <button @click="register">register</button>
     </div>
+    <!-- register -->
+    <!-- groupcall -->
     <div v-show="this.participants">
       <div class="row">
         <div class="col-2">
@@ -18,6 +21,7 @@
         </div>
       </div>
     </div>
+    <!-- groupcall -->
   </div>
 </template>
 
@@ -102,3 +106,12 @@ export default {
   }
 }
 </script>
+
+
+sum = function(x,y) {
+  return x + y
+}
+
+plusThree = sum.bind(3)
+
+plusThree(5) -> 8
