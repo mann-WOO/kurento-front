@@ -29,7 +29,7 @@ export default {
   },
   // : lifecycle hook
   mounted() {
-    document.getElementById(this.videoId).appendChild(this.video)
+    document.getElementById("vidCon").appendChild(this.video)
   },
   // : updated
   updated() {

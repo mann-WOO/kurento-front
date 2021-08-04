@@ -28,6 +28,9 @@ export default {
       state.participants[name] = participant
       // 디버깅
       console.log('participant added', state.participants)
+    },
+    DISPOSE_PARTICIPANT(state, participantName) {
+      delete state.participants[participantName]
     }
   },
   // actions
@@ -65,7 +68,7 @@ export default {
           mandatory: {
             maxWidth : 320,
             maxFrameRate : 15,
-            minFrameRate : 15
+            minFrameRate : 15,
           }
         }
       }
@@ -107,7 +110,7 @@ export default {
         remoteVideo: video,
         onicecandidate: participant.onIceCandidate.bind(participant)
       }
-
+      // 참가자의 rtcPeer 설정
       participant.rtcPeer = new kurentoUtils.WebRtcPeer.WebRtcPeerRecvonly(
         options,
         function(error) {
@@ -117,8 +120,23 @@ export default {
           // this -> kurentoUtils.WebRtcPeer.WebRtcPeerRecvonly
           this.generateOffer (participant.offerToReceiveVideo.bind(participant));
       })
-
+      // 참가자를 state의 참가자 목록에 추가
       context.commit('ADD_PARTICIPANT', { name:sender, participant })
+    },
+    // 방에 참여해있는 상태에서 새로운 참가자가 들어왔을 때
+    onNewParticipant(context, request) {
+      context.dispatch('receiveVideo', request.name)
+    },
+    // participant 객체에서 삭제 메서드를 사용했을 때
+    onParticipantLeft(context, request) {
+      console.log(context.state.myName)
+      console.log('Participant' + request.name + 'left')
+      var participant = participants[request.name]
+      participant.dispose()
+    },
+    // participant.dispose에서 오는 요청
+    disposeParticipant(context, participantName) {
+      context.commit('DISPOSE_PARTICIPANT', participantName)
     }
   },
   getters: {
