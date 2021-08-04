@@ -1,54 +1,5 @@
-// import { Participant } from './js/participant.js'
+import Participant from './js/participant.js'
 import kurentoUtils from 'kurento-utils'
-
-
-import store from "@/store/index.js"
-function Participant(name) {
-  this.name = name
-  
-  var rtcPeer
-  Object.defineProperty(this, 'rtcPeer', {writable: true})
-
-  var container = document.createElement('div');
-  var video = document.createElement('video');
-
-  container.appendChild(video);
-
-  video.id = 'video-' + name;
-  video.autoplay = true;
-  video.controls = false;
-
-  this.getElement = function() {
-		return container;
-	}
-
-  this.getVideoElement = function() {
-		return video;
-	}
-
-  this.offerToReceiveVideo = function(error, offerSdp, wp){
-    if (error) return console.error("sdp offer error")
-    console.log('Invoking participant.offerToReceiveVideo method')
-    let message = {
-      id: "receiveVideoFrom",
-      sender : name,
-      sdpOffer : offerSdp
-    }
-    store.dispatch('meetingRoom/sendMessage', message)
-  }
-
-  this.onIceCandidate = function(candidate, wp) {
-    console.log("Local Participant candidate" + JSON.stringify(candidate))
-
-    let message = {
-      id: 'onIceCandidate',
-      cnadidate: candidate,
-      name: name
-    }
-    // vuex store의 sendmessage 이용
-    store.dispatch('meetingRoom/sendMessage', message)
-  }
-}
 
 export default {
   namespaced: true,
@@ -69,8 +20,9 @@ export default {
       state.myName = myName
       state.participants = {}
     },
-    ADD_PARTICIPANT(state, participantKey, participantObject) {
-      state.participants[participantKey] = participantObject
+    ADD_PARTICIPANT(state, {name, participant}) {
+      state.participants[name] = participant
+      // 디버깅
       console.log('participant added', state.participants)
     }
   },
@@ -122,7 +74,9 @@ export default {
       participant.rtcPeer = new kurentoUtils.WebRtcPeer.WebRtcPeerSendonly(
         options,
         function(error) {
-          if(error) {
+          if (error) {
+            //debugging
+            console.log(participant, video)
             return console.error(error)
           }
           // this -> kurentoUtils.WebRtcPeer.WebRtcPeerRecvonly
@@ -132,7 +86,8 @@ export default {
       )
       
       // state에 user participant 오브젝트 추가
-      context.commit('ADD_PARTICIPANT', context.state.myName, participant)
+      const myName = context.state.myName
+      context.commit('ADD_PARTICIPANT', { name: myName, participant })
       // state에 방에 있던 participant들 오브젝트 추가
       message.data.forEach(function(sender) {
         context.dispatch('receiveVideo', sender)
@@ -158,7 +113,7 @@ export default {
           this.generateOffer (participant.offerToReceiveVideo.bind(participant));
       })
 
-      context.commit('ADD_PARTICIPANT', sender, participant)
+      context.commit('ADD_PARTICIPANT', { name:sender, participant })
     }
   },
   getters: {

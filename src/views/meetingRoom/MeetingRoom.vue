@@ -1,20 +1,20 @@
 <template>
   <div>
     <!-- register -->
-    <div v-show="!this.participants">
+    <div v-if="!participants">
       <h1>MeetingRoom</h1>
       <input type="text" v-model="name">
       <button @click="register">register</button>
     </div>
     <!-- register -->
     <!-- groupcall -->
-    <div v-show="this.participants">
+    <div v-if="participants">
       <div class="row">
         <div class="col-2">
           <VideoUnitGroup/>
         </div>
         <div class="col-7">
-          <MainVideoUnit/>
+          <MainVideoUnit :mainParticipant="participants[myName]"/>
         </div>
         <div class="col-3">
           <MeetingSideBar/>
@@ -106,12 +106,3 @@ export default {
   }
 }
 </script>
-
-
-sum = function(x,y) {
-  return x + y
-}
-
-plusThree = sum.bind(3)
-
-plusThree(5) -> 8

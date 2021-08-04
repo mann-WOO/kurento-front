@@ -1,6 +1,7 @@
 <template>
   <div>
-    <!-- 여기부터 코드 작성 -->
+    LocalVideo
+    {{ mainParticipant.getVideoElement() }}
   </div>
 </template>
 
@@ -13,6 +14,7 @@ export default {
   },
   // : props
   props: {
+    mainParticipant: Object
   },
   // : data
   data() {
@@ -24,6 +26,10 @@ export default {
   },
   // : lifecycle hook
   mounted() {
+  },
+  // : updated
+  updated() {
+    console.log(this.mainParticipant)
   },
   // : methods
   methods: {
