@@ -3,12 +3,14 @@ import kurentoUtils from 'kurento-utils'
 
 export default {
   namespaced: true,
+  // state
   state: () => ({
     ws: null,
     participants: null,
     serverMessage: null,
     myName: null,
   }),
+  // mutations
   mutations: {
     WS_INIT(state, url){
       state.ws = new WebSocket(url)
@@ -18,14 +20,17 @@ export default {
     },
     SET_MY_NAME(state, myName) {
       state.myName = myName
-      state.participants = {}
     },
     ADD_PARTICIPANT(state, {name, participant}) {
+      if (state.participants===null) {
+        state.participants = {}
+      }
       state.participants[name] = participant
       // 디버깅
       console.log('participant added', state.participants)
     }
   },
+  // actions
   actions: {
     // meetingRoom view 생성시 웹소켓 생성 action
     wsInit(context, url) {

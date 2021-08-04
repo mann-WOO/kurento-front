@@ -1,20 +1,20 @@
 <template>
   <div>
     <!-- register -->
-    <div v-if="!participants">
+    <div v-if="participants===null">
       <h1>MeetingRoom</h1>
       <input type="text" v-model="name">
       <button @click="register">register</button>
     </div>
     <!-- register -->
     <!-- groupcall -->
-    <div v-if="participants">
+    <div v-if="participants!==null">
       <div class="row">
         <div class="col-2">
           <VideoUnitGroup/>
         </div>
         <div class="col-7">
-          <MainVideoUnit :mainParticipant="participants[myName]"/>
+          <MainVideoUnit :mainParticipant="mainParticipant"/>
         </div>
         <div class="col-3">
           <MeetingSideBar/>
@@ -81,6 +81,9 @@ export default {
     },
     ws() {
       return this.$store.state.meetingRoom.ws
+    },
+    mainParticipant() {
+      return this.participants[this.$store.state.meetingRoom.myName]
     }
   },
   // : lifecycle hook
@@ -102,7 +105,7 @@ export default {
       }
       this.$store.dispatch('meetingRoom/sendMessage', message)
       this.$store.dispatch('meetingRoom/setMyName', this.name)
-    }
+    },
   }
 }
 </script>

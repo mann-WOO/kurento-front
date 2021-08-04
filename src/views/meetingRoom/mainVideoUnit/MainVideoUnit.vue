@@ -1,7 +1,7 @@
 <template>
   <div>
-    LocalVideo
-    {{ mainParticipant.getVideoElement() }}
+    <p>LocalVideo</p>
+    <div id="vidCon"></div>
   </div>
 </template>
 
@@ -23,9 +23,13 @@ export default {
   },
   // : computed
   computed: {
+    video() {
+      return this.mainParticipant.getVideoElement()
+    },
   },
   // : lifecycle hook
   mounted() {
+    document.getElementById(this.videoId).appendChild(this.video)
   },
   // : updated
   updated() {
