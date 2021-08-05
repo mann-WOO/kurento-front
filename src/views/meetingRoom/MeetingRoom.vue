@@ -50,9 +50,9 @@ export default {
   // : watch
   watch: {
     serverMessage: function () {
+      console.log(this.serverMessage.id)
       switch (this.serverMessage.id) {
       case 'existingParticipants':
-        console.log(this.serverMessage)
         this.$store.dispatch('meetingRoom/onExistingParticipants', this.serverMessage)
         break;
       case 'newParticipantArrived':
@@ -65,9 +65,16 @@ export default {
         this.$store.dispatch('meetingRoom/receiveVideoResponse', this.serverMessage)
         break;
       case 'iceCandidate':
+        const message = this.serverMessage
+        this.participants[message.name].rtcPeer.addIceCandidate(message.candidate, function (error) {
+          if (error) {
+            console.error("Error adding candidate: " + error)
+            return
+          }
+        })
         break;
       default:
-        console.error('Unrecognized message')
+        console.error('Unrecognized message' + this.serverMessage)
       }
     },
   },

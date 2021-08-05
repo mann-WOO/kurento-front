@@ -98,6 +98,7 @@ export default {
       context.commit('ADD_PARTICIPANT', { name: myName, participant })
       // state에 방에 있던 participant들 오브젝트 추가
       message.data.forEach(function(sender) {
+        console.log('forEach문 sender: ' + sender)
         context.dispatch('receiveVideo', sender)
         })
       console.log('onExistingParticipants end')
@@ -125,18 +126,24 @@ export default {
     },
     // 방에 참여해있는 상태에서 새로운 참가자가 들어왔을 때
     onNewParticipant(context, request) {
+      console.log('onNewParticipant' + request.name)
       context.dispatch('receiveVideo', request.name)
     },
     // participant 객체에서 삭제 메서드를 사용했을 때
     onParticipantLeft(context, request) {
       console.log(context.state.myName)
       console.log('Participant' + request.name + 'left')
-      var participant = participants[request.name]
+      var participant = context.state.participants[request.name]
       participant.dispose()
     },
     // participant.dispose에서 오는 요청
     disposeParticipant(context, participantName) {
       context.commit('DISPOSE_PARTICIPANT', participantName)
+    },
+    receiveVideoResponse(context, result) {
+      context.state.participants[result.name].rtcPeer.processAnswer(result.sdpAnswer, function (error) {
+        if (error) return console.error (error)
+      })
     }
   },
   getters: {

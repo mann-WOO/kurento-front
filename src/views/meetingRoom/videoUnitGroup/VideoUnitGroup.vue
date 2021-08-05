@@ -1,15 +1,19 @@
 <template>
   <div>
-    <!-- 여기부터 코드 작성 -->
+    <div v-for="participant in participants" :key="participant.name">
+      <VideoUnit :participant="participant">
+    </div>
   </div>
 </template>
 
 <script>
 // import "./template.scss";
+import VideoUnit from './videoUnit/VideoUnit.vue'
 
 export default {
   name: 'VideoUnitGroup',
   components: {
+    VideoUnit,
   },
   // : props
   props: {
@@ -21,6 +25,9 @@ export default {
   },
   // : computed
   computed: {
+    participants() {
+      return this.$store.state.meetingRoom.participants
+    }
   },
   // : lifecycle hook
   mounted() {

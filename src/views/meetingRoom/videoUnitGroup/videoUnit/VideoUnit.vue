@@ -1,6 +1,7 @@
 <template>
   <div>
-    <!-- 여기부터 코드 작성 -->
+    <div :id="videoId">
+    </div>
   </div>
 </template>
 
@@ -13,6 +14,7 @@ export default {
   },
   // : props
   props: {
+    participant: Object
   },
   // : data
   data() {
@@ -21,9 +23,16 @@ export default {
   },
   // : computed
   computed: {
+    videoId() {
+      return "video-" + this.participant.name
+    },
+    video() {
+      return this.participant.getVideoElement()
+    }
   },
   // : lifecycle hook
   mounted() {
+    document.getElementById(this.videoId).appendChild(this.video)
   },
   // : methods
   methods: {

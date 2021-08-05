@@ -1,7 +1,7 @@
 <template>
   <div>
     <p>LocalVideo</p>
-    <div id="vidCon"></div>
+    <div id="mainVideo"></div>
   </div>
 </template>
 
@@ -29,7 +29,7 @@ export default {
   },
   // : lifecycle hook
   mounted() {
-    document.getElementById("vidCon").appendChild(this.video)
+    document.getElementById("mainVideo").appendChild(this.video)
   },
   // : updated
   updated() {
