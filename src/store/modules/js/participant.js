@@ -42,7 +42,7 @@ export default function Participant(name) {
 
     let message = {
       id: 'onIceCandidate',
-      cnadidate: candidate,
+      candidate: candidate,
       name: name
     }
     // vuex store의 sendmessage 이용
